@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/2.4.7/shaka-player.compiled.js"></script>
+		<link rel="stylesheet" type="text/css" href="src\css\main.css">
+	</head>
+	<body>
+		<div id="ItemList">
+			
+			<div class="header">
+				<div class="header-left">
+					<div class="logo" id="logo1">LOGO</div>
+				</div>
+				
+			</div>
+			<div class="contentBack">
+				<div class="contentWrapper">
+					<section class="videoSection" id="secSet1">
+						<h1 class="sectionHeader">Video Set 1</h1>
+						<ul class="videoList" id="setList-1" >
+							<li v-for="(item, index) in jobFunctions" v-if="item.category === 'Video Set 1'" v-on:click="play(item)">
+								<div class="imgDiv" ><span class="helper"></span><img class="imgPoster" v-bind:src="item.posterImage"/><span class="duration">{{item.duration}}</span></div>
+								<div class="title" v-bind:title="item.description"><b>{{ item.title }} |<br>{{ limitChar(item.description) }}</b></div><br>
+								<div class="publisher">{{ item.publisher }}</div>
+							</li>
+						</ul>
+					</section>
+					
+					<section class="videoSection" id="secSet2">
+						<h1 class="sectionHeader">Video Set 2</h1>
+						<ul class="videoList" id="setList-2" >
+							<li v-for="(item, index) in jobFunctions" v-if="item.category === 'Video Set 2'" v-on:click="play(item)">
+								<div class="imgDiv"><span class="helper"></span><img class="imgPoster" v-bind:src="item.posterImage"/><span class="duration">{{item.duration}}</span></div>
+								<div class="title" v-bind:title="item.description"><b>{{ item.title }} |<br>{{ limitChar(item.description) }}</b></div><br>
+								<div class="publisher">{{ item.publisher }}</div>
+							</li>
+						</ul>
+					</section>
+				</div>
+			</div>
+			<div class="footer">
+				<div class="firstSection">
+					<div class="footerLeftPart">
+						<span class="footerLogo"><b>LOGO</b></span>
+						<span class="copyRight"><b>&copy;2017 Mobiotics. All rights reserved.</b></span>
+					</div>
+					<div class="footerRightPart">
+						<ul class="fLinkList">
+							<li><a href="#">About</a></li>
+							<li><a href="#">Help</a></li>
+							<li><a href="#">Terms and Conditions</a></li>
+							<li><a href="#">Privacy Policy</a></li>
+							<li><a href="#">Support</a></li>
+						</ul>
+					</div>
+				</div><br>
+				
+				<div class="secondSection">
+					<div class="footerLeftPart">
+						<div class="appsHead">
+							Our Apps
+						</div>
+						
+						<div class="appDown">
+							<span class="osLOGO"><img class="osImg" src="src\img\download-on-the-app-store-apple.svg"/></span>
+							<span class="osLOGO"><img class="osImg" src="src\img\google-play-badge.svg"/></span>
+						</div>
+					</div>
+					<div class="footerRightPart">
+						<div class="innerWrapper">
+							<div class="innerLeft">
+								<div class="innerApptext">Connect with us</div>
+							</div>
+							<div class="innerRight">
+							<span class="appLogo"><img class="socialLogo" src="src\img\flogo_RGB_HEX-512.png"/></span>
+							<span class="appLogo"><img class="socialLogo" src="src\img\badgeRGB-288px.png"/></span>
+							<span class="appLogo"><img class="socialLogo" src="src\img\Twitter_Social_Icon_Rounded_Square_Color.png"/></span>
+							<span class="appLogo"><img class="socialLogo" src="src\img\In-2C-128px-R.png"/></span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="videoPopup" id="videoPopup" v-show="showPopup">
+				<video id="video" controls autoplay></video>
+			</div>
+			
+			<div class="mask" v-show="showPopup" v-on:click="close()"></div>
+		</div>
+
+
+		<script>
+			var vue_det = new Vue({
+				el: '#ItemList',
+				data: {
+					showPopup : false,
+					jobFunctions: [
+						{'category': 'Video Set 1', 'manifestURI': 'http://dash.akamaized.net/dash264/TestCases/1c/qualcomm/1/MultiRate.mpd', 'posterImage': 'https://cdn.pixabay.com/photo/2017/05/31/18/38/sea-2361247_960_720.jpg', 'title': 'Qualcomm', 'description': 'The Jungle Tales (1080p)', 'publisher': 'Bitmovin', 'duration': '9:54'},
+						{'category': 'Video Set 2', 'manifestURI': 'http://dash.akamaized.net/dash264/TestCasesIOP41/MultiTrack/associative_content/1/manifest_associated_content_live.mpd', 'posterImage': 'https://cdn.pixabay.com/photo/2017/10/17/19/11/fantasy-2861815_960_720.jpg', 'title': 'The Future', 'description': 'Original Movie: Animated', 'publisher': 'Bitmovin', 'duration': '12:14'},
+						{'category': 'Video Set 1', 'manifestURI': 'http://dash.akamaized.net/dash264/CTA/imsc1/IT1-20171027_dash.mpd', 'posterImage': 'https://static.kvraudio.com/i/b/digits-2.png', 'title': 'Digits', 'description': 'Test vector with IMSC1 data', 'publisher': 'Bitmovin', 'duration': '4:40'},
+						{'category': 'Video Set 2', 'manifestURI': 'https://dash.akamaized.net/dash264/TestCasesVP9/vp9-hd-hdr/sintel-vp9-hd-hdr.mpd', 'posterImage': 'https://cdn.pixabay.com/photo/2017/01/21/13/59/ice-1997289_960_720.jpg', 'title': 'VP9 HD-HDR10 VOD', 'description': 'Encrypted VP9 test using HD-SDR ', 'publisher': 'Bitmovin', 'duration': '0:30'},
+						{'category': 'Video Set 2', 'manifestURI': 'http://www.bok.net/dash/tears_of_steel/cleartext/stream.mpd', 'posterImage': 'https://cdn.pixabay.com/photo/2017/01/06/19/15/soap-bubble-1958650_960_720.jpg', 'title': 'Tears Of Steel', 'description': 'mpeg dash sample content', 'publisher': 'Bitmovin', 'duration': '12:14'},
+						{'category': 'Video Set 1', 'manifestURI': 'https://bitmovin-a.akamaihd.net/content/playhouse-vr/mpds/105560.mpd', 'posterImage': 'https://cdn.pixabay.com/photo/2014/05/22/16/52/pyrenees-351266_960_720.jpg', 'title': 'PlayHouse', 'description': 'VR video', 'publisher': 'Bitmovin', 'duration': '2:17'},
+						{'category': 'Video Set 1', 'manifestURI': 'http://dash.akamaized.net/dash264/TestCases/1c/qualcomm/1/MultiRate.mpd', 'posterImage': 'https://cdn.pixabay.com/photo/2015/03/26/10/04/new-york-690868_960_720.jpg', 'title': 'Up and Above', 'description': 'new-york-city-skyline', 'publisher': 'Bitmovin', 'duration': '9:54'},
+						{'category': 'Video Set 2', 'manifestURI': 'http://dash.akamaized.net/dash264/TestCases/1c/qualcomm/1/MultiRate.mpd', 'posterImage': 'https://cdn.pixabay.com/photo/2015/07/11/23/02/plane-841441_960_720.jpg', 'title': 'Flight', 'description': 'Plane Trip Video', 'publisher': 'Bitmovin', 'duration': '9:54'},
+						{'category': 'Video Set 2', 'manifestURI': 'https://bitmovin-a.akamaihd.net/content/MI201109210084_1/mpds/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.mpd', 'posterImage': 'https://cdn.pixabay.com/photo/2017/12/14/09/41/new-zealand-3018634_960_720.jpg', 'title': 'Volcano', 'description': 'new-zealand-volcano-crater', 'publisher': 'Bitmovin', 'duration': '3:30'},
+						{'category': 'Video Set 2', 'manifestURI': 'https://bitmovin-a.akamaihd.net/content/playhouse-vr/mpds/105560.mpd', 'posterImage': 'https://cdn.pixabay.com/photo/2015/12/07/14/18/drone-1080844_960_720.jpg', 'title': 'Drones', 'description': 'In the Sky', 'publisher': 'Bitmovin', 'duration': '2:17'},
+						{'category': 'Video Set 1', 'manifestURI': 'https://bitmovin-a.akamaihd.net/content/playhouse-vr/mpds/105560.mpd', 'posterImage': 'https://cdn.pixabay.com/photo/2014/08/11/11/50/full-moon-415501__340.jpg', 'title': 'Moon', 'description': 'In the night sky', 'publisher': 'Bitmovin', 'duration': '2:17'},
+						{'category': 'Video Set 1', 'manifestURI': 'https://bitmovin-a.akamaihd.net/content/MI201109210084_1/mpds/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.mpd', 'posterImage': 'https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072823_960_720.jpg', 'title': 'Forests', 'description': 'road-forest-season-autumn-fall', 'publisher': 'Bitmovin', 'duration': '3:30'}]
+				},
+				methods: {	
+					play: function (item) {
+						document.body.style.overflow = "hidden";
+						var vm = this;
+						vm.showPopup = true;
+						
+						
+						shaka.polyfill.installAll();
+						if (shaka.Player.isBrowserSupported()) {
+							// Everything looks good!
+							var video = document.getElementById('video');
+							vm.player = new shaka.Player(video);
+
+							// Attach player to the window to make it easy to access in the JS console.
+							window.player = vm.player;
+
+							// Listen for error events.
+							vm.player.addEventListener('error', onErrorEvent);
+
+							// Try to load a manifest.
+							// This is an asynchronous process.
+							vm.player.load(item.manifestURI).then(function() {
+								// This runs if the asynchronous load is successful.
+								console.log('The video has now been loaded!');
+							}).catch(onError);
+						} else {
+							// This browser does not have the minimum set of APIs we need.
+							console.error('Browser not supported!');
+						}
+						
+						function onErrorEvent(event) {
+							// Extract the shaka.util.Error object from the event.
+							onError(event.detail);
+						}
+
+						function onError(error) {
+							// Log the error.
+							console.error('Error code', error.code, 'object', error);
+						}
+					},
+					
+					close: function (){
+						var vm = this;
+						document.body.style.overflow = "auto";
+						vm.showPopup = false;
+						vm.player.destroy();
+					},
+					
+					limitChar : function (description) {
+						if (description.length > 20) {
+							return description.substring(0, 17) + '...';
+						} else {
+							return description;
+						}
+					}
+					
+				}
+			});
+			 
+		</script>
+	</body>
+</html>
